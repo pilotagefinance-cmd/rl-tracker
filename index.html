@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RL Tracker — Session Board</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&family=Barlow+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="bg-grid"></div>
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo-group">
+        <h1 class="site-title">RL <span>TRACKER</span></h1>
+        <div class="live-badge">
+          <span class="live-dot"></span>
+          <span id="connection-text">SYNCHRONISATION...</span>
+        </div>
+      </div>
+      <div class="current-session">
+        <span class="session-label">DATE</span>
+        <span class="session-date" id="current-date">-- -- ----</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <section class="board-card entry-card">
+      <div class="board-header"><h2 class="board-title">SAISIE DU MATCH</h2></div>
+      <form id="match-form" class="match-form">
+        <div class="teams-grid">
+          <div class="team-side side-a">
+            <div class="team-label">ÉQUIPE A</div>
+            <select id="team-a1" class="form-input" required>
+              <option value="">Joueur 1</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <select id="team-a2" class="form-input">
+              <option value="">Joueur 2</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <select id="team-a3" class="form-input">
+              <option value="">Joueur 3 (Optionnel)</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <input type="number" id="score-a" class="score-input" placeholder="Score A" min="0" required>
+          </div>
+
+          <div class="vs-separator">VS</div>
+
+          <div class="team-side side-b">
+            <div class="team-label">ÉQUIPE B</div>
+            <select id="team-b1" class="form-input" required>
+              <option value="">Joueur 1</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <select id="team-b2" class="form-input">
+              <option value="">Joueur 2</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <select id="team-b3" class="form-input">
+              <option value="">Joueur 3 (Optionnel)</option>
+              <option value="Pô">Pô</option><option value="Beubeu">Beubeu</option><option value="Matt">Matt</option><option value="Bruno">Bruno</option><option value="Jonathan">Jonathan</option>
+            </select>
+            <input type="number" id="score-b" class="score-input" placeholder="Score B" min="0" required>
+          </div>
+        </div>
+        <button type="submit" id="submit-btn" class="btn btn-primary">ENREGISTRER LE MATCH</button>
+      </form>
+    </section>
+
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-global">GLOBAL</button>
+      <button class="tab-btn" data-tab="tab-today">AUJOURD'HUI</button>
+    </div>
+
+    <div id="tab-global" class="tab-content active">
+      <div class="board-card">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>JOUEUR</th>
+              <th>POINTS</th>
+              <th>MATCHS</th>
+              <th>VICTOIRES</th>
+              <th>DÉFAITES</th>
+            </tr>
+          </thead>
+          <tbody id="global-ranking-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="tab-today" class="tab-content">
+      <div class="board-card">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>JOUEUR</th>
+              <th>POINTS</th>
+              <th>MATCHS</th>
+              <th>VICTOIRES</th>
+              <th>DÉFAITES</th>
+            </tr>
+          </thead>
+          <tbody id="today-ranking-body"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <div id="success-flash" class="flash-overlay" style="display:none;">MATCH ENREGISTRÉ !</div>
+  <script src="app.js"></script>
+</body>
+</html>
