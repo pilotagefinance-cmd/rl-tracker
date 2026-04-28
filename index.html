@@ -95,9 +95,10 @@
     <!-- ONGLETS -->
     <div class="tabs-nav">
       <button class="tab-btn active" data-tab="tab-global">GLOBAL</button>
-      <button class="tab-btn" data-tab="tab-today">AUJOURD'HUI</button>
+      <button class="tab-btn" data-tab="tab-today">SESSION</button>
     </div>
 
+    <!-- GLOBAL -->
     <div id="tab-global" class="tab-content active">
       <div class="board-card">
         <table class="ranking-table">
@@ -106,6 +107,8 @@
               <th>JOUEUR</th>
               <th>PTS/MJ</th>
               <th>POINTS</th>
+              <th>🔴</th>
+              <th>🧹</th>
               <th>MATCHS</th>
               <th>VICTOIRES</th>
               <th>DÉFAITES</th>
@@ -116,7 +119,14 @@
       </div>
     </div>
 
+    <!-- SESSION (ex aujourd'hui) -->
     <div id="tab-today" class="tab-content">
+      <div class="date-selector-row">
+        <span class="bonus-label">SESSION DU</span>
+        <select id="date-picker" class="form-input date-picker">
+          <option value="">— Aucun match —</option>
+        </select>
+      </div>
       <div class="board-card">
         <table class="ranking-table">
           <thead>
@@ -124,6 +134,8 @@
               <th>JOUEUR</th>
               <th>PTS/MJ</th>
               <th>POINTS</th>
+              <th>🔴</th>
+              <th>🧹</th>
               <th>MATCHS</th>
               <th>VICTOIRES</th>
               <th>DÉFAITES</th>

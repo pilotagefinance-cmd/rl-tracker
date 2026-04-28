@@ -141,3 +141,23 @@ body {
   border-color: rgba(255, 153, 0, 0.4);
   box-shadow: 0 0 10px rgba(255, 153, 0, 0.2);
 }
+
+/* --- DATE SELECTOR ROW --- */
+.date-selector-row {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 14px;
+  padding: 12px 16px;
+  background: rgba(13, 19, 32, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.date-picker {
+  width: auto; min-width: 220px;
+  margin-bottom: 0;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1rem;
+  color: #00d4ff;
+  border-color: rgba(0, 212, 255, 0.3);
+}
