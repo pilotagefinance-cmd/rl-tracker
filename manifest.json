@@ -1,0 +1,22 @@
+{
+  "name": "RL Tracker SNCF",
+  "short_name": "RL Tracker",
+  "description": "Suivi des sessions Rocket League",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0d1320",
+  "theme_color": "#0d1320",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
