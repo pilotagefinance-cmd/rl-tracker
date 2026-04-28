@@ -161,3 +161,66 @@ body {
   color: #00d4ff;
   border-color: rgba(0, 212, 255, 0.3);
 }
+
+/* ============================================================
+   RESPONSIVE MOBILE
+   ============================================================ */
+
+@media (max-width: 768px) {
+
+  /* HEADER */
+  .site-header { padding: 10px 16px; }
+  .site-title { font-size: 1.4rem; }
+  .current-session { display: none; } /* Masqué sur mobile, prend trop de place */
+
+  /* CONTENU */
+  .main-content { padding: 12px; }
+  .board-card { padding: 16px; }
+
+  /* ONGLETS */
+  .tabs-nav { gap: 6px; margin: 12px 0; }
+  .tab-btn { padding: 8px 16px; font-size: 0.9rem; flex: 1; text-align: center; }
+
+  /* FORMULAIRE — passer en colonne */
+  .teams-grid {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .vs-separator {
+    text-align: center;
+    padding: 8px 0;
+    font-size: 1.5rem;
+  }
+
+  .team-side { margin-bottom: 8px; }
+
+  .form-input { font-size: 1rem; padding: 10px; }
+  .score-input { font-size: 1.6rem; text-align: center; }
+
+  /* BONUS ROW */
+  .bonus-row { gap: 14px; padding: 12px; }
+  .bonus-preview { margin-left: 0; }
+
+  /* TABLEAU — réduire padding et taille police */
+  .ranking-table th { font-size: 0.75rem; padding: 6px 4px; letter-spacing: 0; }
+  .ranking-table td { font-size: 1rem; padding: 10px 4px; }
+  .ranking-table td:first-child { padding-left: 8px; font-size: 0.95rem; }
+
+  /* DATE PICKER */
+  .date-selector-row { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .date-picker { width: 100%; min-width: unset; }
+
+  /* FLASH */
+  .flash-overlay { left: 16px; right: 16px; bottom: 16px; text-align: center; }
+}
+
+@media (max-width: 400px) {
+  /* Très petits écrans : masquer colonnes secondaires du tableau */
+  .ranking-table th:nth-child(4),
+  .ranking-table td:nth-child(4),
+  .ranking-table th:nth-child(5),
+  .ranking-table td:nth-child(5) {
+    display: none;
+  }
+}
