@@ -31,15 +31,9 @@ body {
 .site-title { font-family: 'Rajdhani'; font-size: 2rem; margin: 0; }
 .site-title span { color: var(--accent); }
 
-/* --- SYSTÈME D'ONGLETS (IMPORTANT) --- */
-.tab-content {
-  display: none; /* Cache par défaut */
-}
-
-.tab-content.active {
-  display: block; /* Affiche uniquement l'actif */
-}
-
+/* --- SYSTÈME D'ONGLETS --- */
+.tab-content { display: none; }
+.tab-content.active { display: block; }
 .tabs-nav { display: flex; gap: 10px; margin: 20px 0; justify-content: center; }
 .tab-btn {
   background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
@@ -78,3 +72,72 @@ body {
 .vs-separator { font-size: 2.5rem; font-weight: bold; opacity: 0.2; }
 .live-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; background: #777; }
 .flash-overlay { position: fixed; bottom: 20px; right: 20px; background: var(--win); color: black; padding: 15px; border-radius: 8px; font-weight: bold; }
+
+/* --- BONUS ROW --- */
+.bonus-row {
+  display: flex; align-items: center; gap: 24px;
+  flex-wrap: wrap;
+  margin: 16px 0 12px;
+  padding: 14px 18px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px;
+}
+
+.bonus-label {
+  font-family: 'Rajdhani'; font-size: 0.85rem; font-weight: 700;
+  letter-spacing: 2px; color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+
+.bonus-check {
+  display: flex; align-items: center; gap: 10px;
+  cursor: pointer; font-size: 1rem; font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  user-select: none;
+  transition: color 0.2s;
+}
+.bonus-check:hover { color: white; }
+.bonus-check input[type="checkbox"] { display: none; }
+
+.checkmark {
+  width: 22px; height: 22px; border-radius: 5px;
+  border: 2px solid rgba(0, 212, 255, 0.4);
+  background: rgba(0,0,0,0.4);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.bonus-check input:checked + .checkmark {
+  background: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+}
+
+.bonus-check input:checked + .checkmark::after {
+  content: '';
+  width: 5px; height: 10px;
+  border: 2.5px solid #000;
+  border-top: none; border-left: none;
+  transform: rotate(45deg) translateY(-1px);
+  display: block;
+}
+
+.bonus-preview {
+  margin-left: auto;
+  font-family: 'Rajdhani'; font-size: 1.1rem; font-weight: 700;
+  color: rgba(255,255,255,0.35);
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 14px; border-radius: 99px;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.bonus-preview.bonus-active {
+  color: var(--orange);
+  background: rgba(255, 153, 0, 0.12);
+  border-color: rgba(255, 153, 0, 0.4);
+  box-shadow: 0 0 10px rgba(255, 153, 0, 0.2);
+}

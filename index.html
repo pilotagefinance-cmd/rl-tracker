@@ -3,301 +3,154 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RL Tracker — Session Dashboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Barlow+Condensed:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <title>RL Tracker — Session Board</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&family=Barlow+Condensed:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-  <!-- BACKGROUND EFFECTS -->
-  <div class="bg-grid"></div>
-  <div class="bg-glow-top"></div>
-  <div class="bg-glow-bottom"></div>
-  <canvas id="particles-canvas"></canvas>
+  <div class="bg-overlay"></div>
 
-  <!-- HEADER -->
   <header class="site-header">
     <div class="header-inner">
       <div class="logo-group">
-        <div class="logo-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="14" stroke="var(--accent)" stroke-width="2"/>
-            <ellipse cx="16" cy="16" rx="14" ry="5" stroke="var(--accent)" stroke-width="1.5" opacity="0.6"/>
-            <circle cx="16" cy="16" r="4" fill="var(--accent)" opacity="0.9"/>
-          </svg>
-        </div>
-        <div>
-          <h1 class="logo-title">RL<span class="accent">TRACKER</span></h1>
-          <p class="logo-sub">2v2 SESSION DASHBOARD</p>
+        <h1 class="site-title">RL <span>TRACKER</span></h1>
+        <div class="live-badge">
+          <span class="live-dot"></span>
+          <span id="connection-text">SYNCHRONISATION...</span>
         </div>
       </div>
-      <div class="header-meta">
-        <div class="live-badge" id="connection-badge">
-          <span class="live-dot"></span>
-          <span id="connection-text">CONNEXION…</span>
-        </div>
-        <div class="date-display" id="current-date"></div>
+      <div class="current-session">
+        <span class="session-label">DATE&nbsp;</span>
+        <span class="session-date" id="current-date">-- -- ----</span>
       </div>
     </div>
   </header>
 
-  <!-- CONFIG MODAL (shown on first load if no config) -->
-  <div class="modal-overlay" id="config-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-        <h2>CONFIGURATION GOOGLE SHEETS</h2>
-      </div>
-      <p class="modal-desc">Entre ton API Key et l'ID de ton Google Spreadsheet pour connecter l'application.</p>
-      
-      <div class="form-group">
-        <label class="form-label">🔑 Google API Key</label>
-        <input type="text" id="cfg-api-key" class="form-input" placeholder="AIzaSy..." />
-        <span class="form-hint">Depuis Google Cloud Console → Credentials</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">📊 Spreadsheet ID</label>
-        <input type="text" id="cfg-sheet-id" class="form-input" placeholder="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgVE2upms" />
-        <span class="form-hint">L'ID dans l'URL de ton Google Sheets</span>
-      </div>
-      <div class="form-group">
-        <label class="form-label">👥 Joueurs (séparés par des virgules)</label>
-        <input type="text" id="cfg-players" class="form-input" placeholder="Alpha, Bravo, Charlie, Delta" />
-        <span class="form-hint">Les joueurs de ta session (min. 4)</span>
-      </div>
+  <main class="main-content">
 
-      <div class="modal-actions">
-        <button class="btn btn-primary" id="save-config-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-          CONNECTER
-        </button>
-        <button class="btn btn-ghost" id="demo-btn">MODE DÉMO</button>
-      </div>
-      <p id="config-error" class="config-error" style="display:none;"></p>
-    </div>
-  </div>
+    <!-- SAISIE -->
+    <section class="board-card entry-card">
+      <div class="board-header"><h2 class="board-title">SAISIE DU MATCH</h2></div>
+      <form id="match-form" class="match-form">
 
-  <!-- MAIN APP -->
-  <main class="app" id="main-app" style="display:none;">
-
-    <!-- NAV TABS -->
-    <nav class="tab-nav">
-      <button class="tab-btn active" data-tab="dashboard">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        DASHBOARD
-      </button>
-      <button class="tab-btn" data-tab="add-match">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        AJOUTER MATCH
-      </button>
-      <button class="tab-btn" data-tab="history">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-        HISTORIQUE
-      </button>
-    </nav>
-
-    <!-- TAB: DASHBOARD -->
-    <div class="tab-content active" id="tab-dashboard">
-
-      <!-- LIVE SESSION STATS (top KPIs) -->
-      <section class="kpi-strip" id="kpi-today">
-        <div class="kpi-card" id="kpi-matches">
-          <div class="kpi-value">—</div>
-          <div class="kpi-label">MATCHS AUJOURD'HUI</div>
-        </div>
-        <div class="kpi-card" id="kpi-goals">
-          <div class="kpi-value">—</div>
-          <div class="kpi-label">BUTS MARQUÉS</div>
-        </div>
-        <div class="kpi-card" id="kpi-leader">
-          <div class="kpi-value">—</div>
-          <div class="kpi-label">LEADER DU JOUR</div>
-        </div>
-        <div class="kpi-card" id="kpi-streak">
-          <div class="kpi-value">—</div>
-          <div class="kpi-label">STREAK EN COURS</div>
-        </div>
-      </section>
-
-      <!-- TWO COLUMNS: Global + Today -->
-      <div class="boards-grid">
-
-        <!-- GLOBAL LEADERBOARD -->
-        <section class="board-card">
-          <div class="board-header">
-            <h2 class="board-title">
-              <span class="title-icon">🏆</span>
-              CLASSEMENT GLOBAL
-            </h2>
-            <span class="board-badge">ALL TIME</span>
+        <div class="teams-grid">
+          <div class="team-side side-a">
+            <div class="team-label">ÉQUIPE A</div>
+            <select id="team-a1" class="form-input" required>
+              <option value="">Joueur 1</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <select id="team-a2" class="form-input">
+              <option value="">Joueur 2</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <select id="team-a3" class="form-input">
+              <option value="">Joueur 3 (Optionnel)</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <input type="number" id="score-a" class="score-input" placeholder="Score A" min="0" required>
           </div>
-          <div class="table-wrap">
-            <table class="leaderboard-table" id="global-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>JOUEUR</th>
-                  <th>MJ</th>
-                  <th>V</th>
-                  <th>D</th>
-                  <th>PTS/MJ</th>
-                  <th>+/-</th>
-                </tr>
-              </thead>
-              <tbody id="global-tbody">
-                <tr><td colspan="7" class="loading-row"><div class="spinner"></div></td></tr>
-              </tbody>
-            </table>
+
+          <div class="vs-separator">VS</div>
+
+          <div class="team-side side-b">
+            <div class="team-label">ÉQUIPE B</div>
+            <select id="team-b1" class="form-input" required>
+              <option value="">Joueur 1</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <select id="team-b2" class="form-input">
+              <option value="">Joueur 2</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <select id="team-b3" class="form-input">
+              <option value="">Joueur 3 (Optionnel)</option>
+              <option>Pô</option><option>Beubeu</option><option>Matt</option><option>Bruno</option><option>Jonathan</option>
+            </select>
+            <input type="number" id="score-b" class="score-input" placeholder="Score B" min="0" required>
           </div>
-        </section>
+        </div>
 
-        <!-- TODAY LEADERBOARD -->
-        <section class="board-card">
-          <div class="board-header">
-            <h2 class="board-title">
-              <span class="title-icon">⚡</span>
-              SESSION DU JOUR
-            </h2>
-            <div class="board-badge live">
-              <span class="live-dot-sm"></span>
-              LIVE
-            </div>
-          </div>
-          <div class="table-wrap">
-            <table class="leaderboard-table" id="today-table">
-              <thead>
-                <tr>
-                  <th>#</th>
-                  <th>JOUEUR</th>
-                  <th>MJ</th>
-                  <th>V</th>
-                  <th>D</th>
-                  <th>PTS/MJ</th>
-                  <th>+/-</th>
-                </tr>
-              </thead>
-              <tbody id="today-tbody">
-                <tr><td colspan="7" class="loading-row"><div class="spinner"></div></td></tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
+        <!-- BONUS -->
+        <div class="bonus-row">
+          <span class="bonus-label">BONUS VICTOIRE</span>
+          <label class="bonus-check">
+            <input type="checkbox" id="bonus-cucu" />
+            <span class="checkmark"></span>
+            🔴 Cucu Rouge
+          </label>
+          <label class="bonus-check">
+            <input type="checkbox" id="bonus-clean" />
+            <span class="checkmark"></span>
+            🧹 Clean Sheet
+          </label>
+          <div class="bonus-preview" id="bonus-preview">= 1 pt</div>
+        </div>
 
-      </div>
+        <button type="submit" id="submit-btn" class="btn-primary">ENREGISTRER LE MATCH</button>
+      </form>
+    </section>
 
-      <!-- REFRESH BTN -->
-      <div class="refresh-row">
-        <button class="btn btn-ghost btn-sm" id="refresh-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-          ACTUALISER
-        </button>
-        <span class="last-refresh" id="last-refresh"></span>
-      </div>
-
+    <!-- ONGLETS -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tab-global">GLOBAL</button>
+      <button class="tab-btn" data-tab="tab-today">AUJOURD'HUI</button>
     </div>
 
-    <!-- TAB: ADD MATCH -->
-    <div class="tab-content" id="tab-add-match">
-      <div class="match-form-wrap">
-        <div class="match-form-card">
-          <h2 class="form-title">NOUVEAU MATCH</h2>
-          <p class="form-subtitle">Sélectionne les 4 joueurs et entre le score</p>
-
-          <div class="teams-layout">
-            <!-- TEAM A -->
-            <div class="team-block team-a">
-              <div class="team-label">ÉQUIPE A</div>
-              <div class="form-group">
-                <label class="form-label">Joueur 1</label>
-                <select class="form-select" id="team-a1">
-                  <option value="">— Choisir —</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Joueur 2</label>
-                <select class="form-select" id="team-a2">
-                  <option value="">— Choisir —</option>
-                </select>
-              </div>
-              <div class="score-input-group">
-                <label class="form-label">SCORE</label>
-                <input type="number" class="score-input" id="score-a" min="0" max="99" value="0" />
-              </div>
-            </div>
-
-            <!-- VS DIVIDER -->
-            <div class="vs-divider">
-              <div class="vs-line"></div>
-              <div class="vs-badge">VS</div>
-              <div class="vs-line"></div>
-            </div>
-
-            <!-- TEAM B -->
-            <div class="team-block team-b">
-              <div class="team-label">ÉQUIPE B</div>
-              <div class="form-group">
-                <label class="form-label">Joueur 3</label>
-                <select class="form-select" id="team-b1">
-                  <option value="">— Choisir —</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Joueur 4</label>
-                <select class="form-select" id="team-b2">
-                  <option value="">— Choisir —</option>
-                </select>
-              </div>
-              <div class="score-input-group">
-                <label class="form-label">SCORE</label>
-                <input type="number" class="score-input" id="score-b" min="0" max="99" value="0" />
-              </div>
-            </div>
-          </div>
-
-          <!-- WINNER PREVIEW -->
-          <div class="winner-preview" id="winner-preview">
-            <div class="winner-label">RÉSULTAT PRÉVU</div>
-            <div class="winner-value" id="winner-display">Entrez le score pour voir le gagnant</div>
-          </div>
-
-          <button class="btn btn-primary btn-full" id="submit-match-btn">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            ENREGISTRER LE MATCH
-          </button>
-
-          <p id="submit-error" class="config-error" style="display:none;"></p>
-          <div class="success-flash" id="success-flash" style="display:none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-            Match enregistré avec succès !
-          </div>
-        </div>
+    <div id="tab-global" class="tab-content active">
+      <div class="board-card">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>JOUEUR</th>
+              <th>PTS/MJ</th>
+              <th>POINTS</th>
+              <th>MATCHS</th>
+              <th>VICTOIRES</th>
+              <th>DÉFAITES</th>
+            </tr>
+          </thead>
+          <tbody id="global-ranking-body"></tbody>
+        </table>
       </div>
     </div>
 
-    <!-- TAB: HISTORY -->
-    <div class="tab-content" id="tab-history">
-      <section class="board-card history-card">
-        <div class="board-header">
-          <h2 class="board-title"><span class="title-icon">📋</span> HISTORIQUE DES MATCHS</h2>
-          <div class="history-filters">
-            <input type="date" class="form-input date-filter" id="date-filter" />
-            <button class="btn btn-ghost btn-sm" id="clear-filter-btn">TOUT</button>
-          </div>
-        </div>
-        <div id="history-list" class="history-list">
-          <div class="loading-row"><div class="spinner"></div></div>
-        </div>
-      </section>
+    <div id="tab-today" class="tab-content">
+      <div class="board-card">
+        <table class="ranking-table">
+          <thead>
+            <tr>
+              <th>JOUEUR</th>
+              <th>PTS/MJ</th>
+              <th>POINTS</th>
+              <th>MATCHS</th>
+              <th>VICTOIRES</th>
+              <th>DÉFAITES</th>
+            </tr>
+          </thead>
+          <tbody id="today-ranking-body"></tbody>
+        </table>
+      </div>
     </div>
 
   </main>
 
-  <!-- SETTINGS BUTTON -->
-  <button class="settings-fab" id="settings-btn" title="Paramètres">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-  </button>
+  <div id="success-flash" class="flash-overlay" style="display:none;">✅ MATCH ENREGISTRÉ !</div>
 
   <script src="app.js"></script>
+  <script>
+    function updateBonusPreview() {
+      const cucu  = document.getElementById('bonus-cucu').checked;
+      const clean = document.getElementById('bonus-clean').checked;
+      const count = (cucu ? 1 : 0) + (clean ? 1 : 0);
+      const pts   = count === 2 ? 4 : count === 1 ? 2 : 1;
+      const el    = document.getElementById('bonus-preview');
+      el.textContent = `= ${pts} pt${pts > 1 ? 's' : ''}`;
+      el.className = 'bonus-preview' + (pts > 1 ? ' bonus-active' : '');
+    }
+    document.getElementById('bonus-cucu').addEventListener('change', updateBonusPreview);
+    document.getElementById('bonus-clean').addEventListener('change', updateBonusPreview);
+  </script>
 </body>
 </html>
